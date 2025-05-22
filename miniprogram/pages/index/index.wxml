@@ -1,0 +1,166 @@
+<!--index.wxml-->
+<view class="container {{showScoreModal || showTeamDetailModal || showEditScoreModal ? 'modal-open' : ''}}">
+  <view class="main-content {{showScoreModal || showTeamDetailModal || showEditScoreModal ? 'content-hidden' : ''}}">
+    <view class="header">
+      <text class="title">KPL赛事积分计算器</text>
+    </view>
+
+    <!-- 数据导入导出按钮 -->
+    <view class="section">
+      <view class="button-group">
+        <button type="primary" bindtap="exportData">复制信息</button>
+        <button type="primary" bindtap="showImportModal">输入信息</button>
+      </view>
+    </view>
+
+    <!-- 添加队伍部分 -->
+    <view class="section">
+      <view class="section-title">添加队伍</view>
+      <view class="input-group">
+        <input placeholder="请输入队伍名称" bindinput="onTeamNameInput" value="{{newTeamName}}" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal}}"/>
+        <button bindtap="addTeam" type="primary" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal}}">添加队伍</button>
+      </view>
+      <view class="team-list">
+        <view class="team-item" wx:for="{{teams}}" wx:key="name">
+          <view class="team-info" bindtap="showTeamDetail" data-team="{{item.name}}">
+            <text>{{item.name}}</text>
+            <text class="team-score">大分: {{item.bigScore}} 小分: {{item.smallScore}}</text>
+          </view>
+          <view class="team-actions">
+            <button size="mini" bindtap="showAddScore" data-team="{{item.name}}" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal}}">添加比分</button>
+            <button size="mini" type="warn" bindtap="deleteTeam" data-team="{{item.name}}" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal}}">删除</button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 添加小组部分 -->
+    <view class="section">
+      <view class="section-title">添加小组</view>
+      <view class="input-group">
+        <input placeholder="请输入小组名称" bindinput="onGroupNameInput" value="{{newGroupName}}" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal}}"/>
+        <input type="number" placeholder="请输入小组名次" bindinput="onGroupRankInput" value="{{newGroupRank}}" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal}}"/>
+        <button bindtap="addGroup" type="primary" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal}}">添加小组</button>
+      </view>
+      <view class="group-list">
+        <view class="group-item" wx:for="{{groups}}" wx:key="name">
+          <view class="group-info" bindtap="showGroupDetail" data-group="{{item}}">
+            <text>{{item.name}} (名次: {{item.rank}})</text>
+          </view>
+          <view class="group-actions">
+            <button size="mini" type="warn" bindtap="deleteGroup" data-group="{{item.name}}" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal || showGroupDetailModal}}">删除</button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 小组详情弹窗 -->
+    <view class="modal" wx:if="{{showGroupDetailModal}}">
+      <view class="modal-content">
+        <view class="modal-title">编辑小组</view>
+        <view class="group-form">
+          <input placeholder="请输入小组名称" bindinput="onEditGroupNameInput" value="{{editingGroup.name}}" />
+          <input type="number" placeholder="请输入小组名次" bindinput="onEditGroupRankInput" value="{{editingGroup.rank}}" />
+          <view class="modal-buttons">
+            <button bindtap="confirmEditGroup" type="primary">确定</button>
+            <button bindtap="cancelEditGroup">取消</button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 计算概率按钮 -->
+    <view class="section">
+      <button type="primary" bindtap="calculateProbability" class="calculate-btn" disabled="{{showScoreModal || showTeamDetailModal || showEditScoreModal}}">计算出线概率</button>
+    </view>
+
+    <!-- 结果显示 -->
+    <view class="section" wx:if="{{results.length > 0}}">
+      <view class="section-title">计算结果</view>
+      <view class="result-list">
+        <view class="result-item" wx:for="{{results}}" wx:key="team">
+          <text>{{item.team}}</text>
+          <view class="probability-list">
+            <text wx:for="{{item.probabilities}}" wx:for-item="prob" wx:key="group">
+              {{prob.group}}组: {{prob.probability}}%
+            </text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 输入信息弹窗 -->
+  <view class="modal" wx:if="{{showImportModal}}">
+    <view class="modal-content">
+      <view class="modal-title">输入信息</view>
+      <view class="import-form">
+        <textarea class="import-textarea" placeholder="请粘贴要导入的信息" bindinput="onImportInput" value="{{importText}}" maxlength="-1"></textarea>
+        <view class="modal-buttons">
+          <button bindtap="confirmImport" type="primary">确定</button>
+          <button bindtap="cancelImport">取消</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加比分弹窗 -->
+  <view class="modal" wx:if="{{showScoreModal}}">
+    <view class="modal-content">
+      <view class="modal-title">添加比分</view>
+      <view class="score-form">
+        <picker bindchange="onOpponentChange" value="{{selectedOpponentIndex}}" range="{{availableOpponents}}">
+          <view class="picker">
+            选择对手: {{availableOpponents[selectedOpponentIndex]}}
+          </view>
+        </picker>
+        <picker bindchange="onScoreChange" value="{{selectedScoreIndex}}" range="{{scoreOptions}}">
+          <view class="picker">
+            选择比分: {{scoreOptions[selectedScoreIndex]}}
+          </view>
+        </picker>
+        <view class="modal-buttons">
+          <button bindtap="confirmScore" type="primary">确定</button>
+          <button bindtap="cancelScore">取消</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 队伍详情弹窗 -->
+  <view class="modal" wx:if="{{showTeamDetailModal}}">
+    <view class="modal-content">
+      <view class="modal-title">{{selectedTeam}} 比赛记录</view>
+      <view class="match-list">
+        <view class="match-item" wx:for="{{teamMatches}}" wx:key="index" bindtap="showEditScore" data-match="{{item}}">
+          <text>{{item.team1}} {{item.score}} {{item.team2}}</text>
+          <text class="edit-hint">点击修改</text>
+        </view>
+      </view>
+      <view class="modal-buttons">
+        <button bindtap="closeTeamDetail">关闭</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 编辑比分弹窗 -->
+  <view class="modal" wx:if="{{showEditScoreModal}}">
+    <view class="modal-content">
+      <view class="modal-title">调整比分</view>
+      <view class="score-form">
+        <view class="match-info">
+          <text>{{editingMatch.team1}} vs {{editingMatch.team2}}</text>
+        </view>
+        <picker bindchange="onEditScoreChange" value="{{selectedScoreIndex}}" range="{{scoreOptions}}">
+          <view class="picker">
+            选择比分: {{scoreOptions[selectedScoreIndex]}}
+          </view>
+        </picker>
+        <view class="modal-buttons">
+          <button bindtap="confirmEditScore" type="primary">确定</button>
+          <button bindtap="cancelEditScore">取消</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
