@@ -116,3 +116,93 @@ page {
   width: 360rpx;
   height: 360rpx;
 }
+
+.container {
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.section {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  color: #333;
+}
+
+.info-item {
+  display: flex;
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
+}
+
+.label {
+  color: #666;
+  width: 160rpx;
+}
+
+.value {
+  color: #333;
+  flex: 1;
+}
+
+.team-list, .match-list, .result-list {
+  width: 100%;
+}
+
+.team-item, .match-item, .result-item {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+
+.team-item:last-child, .match-item:last-child, .result-item:last-child {
+  border-bottom: none;
+}
+
+.team-name, .match-teams, .result-team {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.team-score, .match-score {
+  font-size: 26rpx;
+  color: #666;
+  margin-left: 20rpx;
+}
+
+.result-probabilities {
+  margin-top: 10rpx;
+}
+
+.probability {
+  font-size: 26rpx;
+  color: #666;
+  margin-right: 20rpx;
+}
+
+.copy-button {
+  width: 90%;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  background-color: #07c160;
+  color: #fff;
+  font-size: 32rpx;
+  border-radius: 44rpx;
+  margin: 40rpx auto;
+}

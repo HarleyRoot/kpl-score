@@ -8,6 +8,8 @@ page {
 
 .container {
   font-family: PingFang SC;
+  padding: 20rpx;
+  box-sizing: border-box;
 }
 
 .title {
@@ -16,7 +18,12 @@ page {
   color: #000000;
   font-size: 44rpx;
   margin-bottom: 40rpx;
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  text-align: center;
 }
+
 .function_title {
   font-family: PingFang SC;
   font-weight: 500;
@@ -139,4 +146,60 @@ page {
   color: rgba(0, 0, 0, 0.4);
   font-size: 24rpx;
   margin-top: 25%;
+}
+
+.history-list {
+  width: 100%;
+}
+
+.history-item {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.history-time {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.history-teams {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.history-summary {
+  display: flex;
+  justify-content: space-between;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.history-arrow {
+  position: absolute;
+  right: 24rpx;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.history-arrow image {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+  margin-top: 100rpx;
 }

@@ -423,29 +423,50 @@ Page({
 
   // 计算概率
   calculateProbability() {
-    if (this.data.teams.length === 0 || this.data.groups.length === 0) {
+    if (this.data.teams.length === 0) {
       wx.showToast({
-        title: '请先添加队伍和小组',
+        title: '请先添加队伍',
         icon: 'none'
       });
       return;
     }
 
-    if (this.data.matches.length === 0) {
+    if (this.data.groups.length === 0) {
       wx.showToast({
-        title: '请先添加比赛记录',
+        title: '请先添加小组',
         icon: 'none'
       });
       return;
     }
 
-    const results = calculateQualificationProbability(
-      this.data.teams,
-      this.data.groups,
-      this.data.matches
-    );
+    const results = calculateQualificationProbability(this.data.teams, this.data.groups, this.data.matches);
+    
+    // 保存历史记录
+    const history = {
+      timestamp: new Date().getTime(),
+      teams: this.data.teams,
+      groups: this.data.groups,
+      matches: this.data.matches,
+      results: results,
+      teamCount: this.data.teams.length,
+      matchCount: this.data.matches.length,
+      groupNames: this.data.groups.map(g => g.name).join('、')
+    };
 
-    this.setData({ results });
+    // 获取现有历史记录
+    let historyList = wx.getStorageSync('calculationHistory') || [];
+    // 将新记录添加到开头
+    historyList.unshift(history);
+    // 只保留最近50条记录
+    if (historyList.length > 50) {
+      historyList = historyList.slice(0, 50);
+    }
+    // 保存历史记录
+    wx.setStorageSync('calculationHistory', historyList);
+
+    this.setData({
+      results
+    });
   },
 
   // 显示编辑比分弹窗

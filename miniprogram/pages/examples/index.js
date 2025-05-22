@@ -1,4 +1,6 @@
 // index.js
+const app = getApp()
+
 Page({
   data: {
     showTip: false,
@@ -71,8 +73,43 @@ Page({
     ],
     haveCreateCollection: false,
     title: "",
-    content: ""
+    content: "",
+    historyList: []
   },
+
+  onLoad: function() {
+    this.loadHistoryList()
+  },
+
+  onShow: function() {
+    this.loadHistoryList()
+  },
+
+  loadHistoryList: function() {
+    const historyList = wx.getStorageSync('calculationHistory') || []
+    // 格式化时间
+    historyList.forEach(item => {
+      const date = new Date(item.timestamp)
+      item.timeStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+    })
+    this.setData({
+      historyList: historyList
+    })
+  },
+
+  showHistoryDetail: function(e) {
+    const index = e.currentTarget.dataset.index
+    const history = this.data.historyList[index]
+    
+    // 将历史记录数据存储到全局变量中
+    app.globalData.currentHistory = history
+    
+    // 跳转到详情页面
+    wx.navigateTo({
+      url: '/pages/exampleDetail/index'
+    })
+  },
+
   onClickPowerInfo(e) {
     const index = e.currentTarget.dataset.index;
     const powerList = this.data.powerList;

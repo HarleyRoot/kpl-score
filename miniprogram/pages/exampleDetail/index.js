@@ -1,4 +1,6 @@
 // pages/exampleDetail/index.js
+const app = getApp()
+
 Page({
   data: {
     type: '',
@@ -18,10 +20,30 @@ Page({
 
     haveGetImgSrc: false,
     imgSrc: '',
+
+    history: null
   },
 
   onLoad(options) {
     this.setData({ type: options?.type, envId: options?.envId });
+    const history = app.globalData.currentHistory
+    if (history) {
+      // 格式化时间
+      const date = new Date(history.timestamp)
+      history.timeStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+      
+      this.setData({
+        history: history
+      })
+    } else {
+      wx.showToast({
+        title: '数据加载失败',
+        icon: 'none'
+      })
+      setTimeout(() => {
+        wx.navigateBack()
+      }, 1500)
+    }
   },
 
   getOpenId() {
@@ -183,4 +205,23 @@ Page({
     });
   },
 
+  copyData() {
+    const data = {
+      teams: this.data.history.teams,
+      groups: this.data.history.groups,
+      matches: this.data.history.matches
+    };
+    
+    const jsonStr = JSON.stringify(data, null, 2);
+    
+    wx.setClipboardData({
+      data: jsonStr,
+      success: () => {
+        wx.showToast({
+          title: '已复制到剪贴板',
+          icon: 'success'
+        });
+      }
+    });
+  }
 })

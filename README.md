@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 # kpl-score
 A wechat app for calculating the probability of appearing in kpl group matches.
-=======
-# KPL赛事积分计算器
-
-一个用于计算KPL赛事队伍出线概率的微信小程序。
 
 ## 功能概述
 
@@ -166,4 +161,14 @@ A wechat app for calculating the probability of appearing in kpl group matches.
    - 将"快速开始"页面改名为"概率计算"
    - 将"基础能力"页面改名为"历史记录"
    - 删除"我"页面
->>>>>>> b893d84 (The input of website)
+
+2. 添加历史记录功能：
+   - 在每次计算概率时自动保存历史记录
+   - 历史记录页面显示计算时间、队伍数量、比赛场次和小组信息
+   - 点击历史记录可查看详细信息，包括：
+     - 基本信息（计算时间、队伍数量、比赛场次、小组信息）
+     - 队伍列表（包含每个队伍的大分和小分）
+     - 比赛记录（包含所有比赛的对阵和比分）
+     - 计算结果（包含每个队伍在各个小组的出线概率）
+   - 历史记录最多保存最近50条
+   - 在历史记录详情页面添加"复制信息"按钮，可以复制该次计算的所有输入信息
